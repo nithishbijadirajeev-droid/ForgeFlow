@@ -1,56 +1,36 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"log"
-	"net/http"
 	"os"
-	"os/signal"
-	"syscall"
-	"time"
 
-	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/config"
-	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/server"
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/database"
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/models"
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/routes"
 )
 
 func main() {
 
-	config.Load()
-
-	router := server.NewRouter()
-
-	addr := fmt.Sprintf(
-		"%s:%d",
-		config.AppConfig.Server.Host,
-		config.AppConfig.Server.Port,
-	)
-
-	srv := &http.Server{
-		Addr:    addr,
-		Handler: router,
+	if os.Getenv("SERVER_PORT") == "" {
+		os.Setenv("SERVER_PORT", "8080")
 	}
 
-	go func() {
-		log.Println("ForgeFlow starting on", addr)
+	database.Connect()
 
-		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatal(err)
-		}
-	}()
+	err := database.DB.AutoMigrate(
+    &models.User{},
+    &models.Project{},
+)
 
-	quit := make(chan os.Signal, 1)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	signal.Notify(
-		quit,
-		syscall.SIGINT,
-		syscall.SIGTERM,
-	)
+	router := routes.SetupRouter()
 
-	<-quit
+	log.Println("🚀 ForgeFlow started on :8080")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	_ = srv.Shutdown(ctx)
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }

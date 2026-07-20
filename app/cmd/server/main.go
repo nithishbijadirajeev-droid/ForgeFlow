@@ -7,9 +7,11 @@ import (
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/database"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/models"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/routes"
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/config"
 )
 
 func main() {
+	config.LoadEnv()
 
 	if os.Getenv("SERVER_PORT") == "" {
 		os.Setenv("SERVER_PORT", "8080")

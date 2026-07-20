@@ -1,22 +1,12 @@
 package jwt
 
 import (
-	"os"
 	"time"
 
-	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/golang-jwt/jwt/v5"
+
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/config"
 )
-
-var secret = []byte(getSecret())
-
-func getSecret() string {
-
-	if os.Getenv("JWT_SECRET") == "" {
-		return "forgeflow-super-secret-key"
-	}
-
-	return os.Getenv("JWT_SECRET")
-}
 
 func GenerateToken(userID string) (string, error) {
 
@@ -27,11 +17,14 @@ func GenerateToken(userID string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-	return token.SignedString(secret)
+	return token.SignedString([]byte(config.Get("JWT_SECRET")))
 }
 
 func ValidateToken(tokenString string) (*jwt.Token, error) {
+
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		return secret, nil
+
+		return []byte(config.Get("JWT_SECRET")), nil
+
 	})
 }

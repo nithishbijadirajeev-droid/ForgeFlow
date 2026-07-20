@@ -1,0 +1,10 @@
+server:
+  host: localhost
+  port: 8080
+
+app:
+  name: ForgeFlow
+  version: v0.1.0
+
+log:
+  level: info

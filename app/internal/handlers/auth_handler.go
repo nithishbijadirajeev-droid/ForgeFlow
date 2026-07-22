@@ -8,6 +8,7 @@ import (
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/service"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/pkg/dto"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/pkg/response"
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/pkg/validation"
 )
 
 type AuthHandler struct {
@@ -40,7 +41,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 			c,
 			http.StatusBadRequest,
 			"Validation failed",
-			err.Error(),
+			validation.FormatValidationErrors(err),
 		)
 		return
 	}
@@ -84,7 +85,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 			c,
 			http.StatusBadRequest,
 			"Validation failed",
-			err.Error(),
+			validation.FormatValidationErrors(err),
 		)
 		return
 	}

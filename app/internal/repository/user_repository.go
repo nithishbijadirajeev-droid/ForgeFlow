@@ -5,6 +5,12 @@ import (
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/models"
 )
 
+type UserRepositoryInterface interface {
+	Create(user *models.User) error
+	GetByEmail(email string) (*models.User, error)
+	GetByID(id string) (*models.User, error)
+}
+
 type UserRepository struct{}
 
 func NewUserRepository() *UserRepository {

@@ -17,7 +17,7 @@ type AuthHandler struct {
 
 func NewAuthHandler() *AuthHandler {
 	return &AuthHandler{
-		service: service.NewAuthService(),
+		service: service.NewAuthService(nil),
 	}
 }
 

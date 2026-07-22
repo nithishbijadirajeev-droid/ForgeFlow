@@ -2,6 +2,8 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/handlers"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/middleware"
@@ -9,44 +11,34 @@ import (
 
 func SetupRouter() *gin.Engine {
 
-	router := gin.Default()
+	router := gin.New()
 
-	projectHandler := handlers.NewProjectHandler()
-	authHandler := handlers.NewAuthHandler()
+	router.Use(gin.Recovery())
 
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status": "UP",
-		})
-	})
+	// Order matters
+	router.Use(middleware.RequestID())
+	router.Use(middleware.RequestLogger())
+	router.Use(middleware.ErrorHandler())
 
-	router.GET("/ready", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"status": "READY",
-		})
-	})
-
-	router.GET("/version", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"version": "v1.0.0",
-		})
-	})
+	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	api := router.Group("/api/v1")
+	{
+		auth := handlers.NewAuthHandler()
+		project := handlers.NewProjectHandler()
 
-	// Public routes
-	api.POST("/register", authHandler.Register)
-	api.POST("/login", authHandler.Login)
+		api.POST("/register", auth.Register)
+		api.POST("/login", auth.Login)
 
-	// Protected routes
-	protected := api.Group("/")
-	protected.Use(middleware.AuthMiddleware())
+		protected := api.Group("/")
+		protected.Use(middleware.AuthMiddleware())
 
-	protected.POST("/projects", projectHandler.Create)
-	protected.GET("/projects", projectHandler.GetAll)
-	protected.GET("/projects/:id", projectHandler.GetByID)
-	protected.PUT("/projects/:id", projectHandler.Update)
-	protected.DELETE("/projects/:id", projectHandler.Delete)
+		protected.POST("/projects", project.Create)
+		protected.GET("/projects", project.GetAll)
+		protected.GET("/projects/:id", project.GetByID)
+		protected.PUT("/projects/:id", project.Update)
+		protected.DELETE("/projects/:id", project.Delete)
+	}
 
 	return router
 }

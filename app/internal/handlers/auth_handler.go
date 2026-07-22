@@ -7,6 +7,7 @@ import (
 
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/service"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/pkg/dto"
+	"github.com/nithishbijadirajeev-droid/forgeflow/app/pkg/response"
 )
 
 type AuthHandler struct {
@@ -19,49 +20,93 @@ func NewAuthHandler() *AuthHandler {
 	}
 }
 
+// Register godoc
+//
+//	@Summary		Register a new user
+//	@Description	Create a new user account
+//	@Tags			Auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		dto.RegisterRequest	true	"Register Request"
+//	@Success		201		{object}	response.APIResponse
+//	@Failure		400		{object}	response.APIResponse
+//	@Router			/api/v1/register [post]
 func (h *AuthHandler) Register(c *gin.Context) {
 
 	var req dto.RegisterRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Validation failed",
+			err.Error(),
+		)
 		return
 	}
 
 	if err := h.service.Register(req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Registration failed",
+			err.Error(),
+		)
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "user registered successfully",
-	})
+	response.Success(
+		c,
+		http.StatusCreated,
+		"User registered successfully",
+		nil,
+	)
 }
 
+// Login godoc
+//
+//	@Summary		Authenticate user
+//	@Description	Login with email and password
+//	@Tags			Auth
+//	@Accept			json
+//	@Produce		json
+//	@Param			request	body		dto.LoginRequest	true	"Login Request"
+//	@Success		200		{object}	response.APIResponse
+//	@Failure		400		{object}	response.APIResponse
+//	@Failure		401		{object}	response.APIResponse
+//	@Router			/api/v1/login [post]
 func (h *AuthHandler) Login(c *gin.Context) {
 
 	var req dto.LoginRequest
 
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Validation failed",
+			err.Error(),
+		)
 		return
 	}
 
 	token, err := h.service.Login(req)
+
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"error": err.Error(),
-		})
+		response.Error(
+			c,
+			http.StatusUnauthorized,
+			"Authentication failed",
+			err.Error(),
+		)
 		return
 	}
 
-	c.JSON(http.StatusOK, dto.AuthResponse{
-		Token: token,
-	})
+	response.Success(
+		c,
+		http.StatusOK,
+		"Login successful",
+		dto.AuthResponse{
+			Token: token,
+		},
+	)
 }

@@ -1,24 +1,33 @@
 package logger
 
 import (
+	"sync"
+
 	"go.uber.org/zap"
 )
 
-var Log *zap.Logger
+var (
+	log  *zap.Logger
+	once sync.Once
+)
 
-func Init() error {
-	var err error
+// GetLogger returns a singleton Zap logger.
+func GetLogger() *zap.Logger {
+	once.Do(func() {
+		var err error
+		log, err = zap.NewProduction()
 
-	Log, err = zap.NewProduction()
-	if err != nil {
-		return err
-	}
+		if err != nil {
+			panic(err)
+		}
+	})
 
-	return nil
+	return log
 }
 
+// Sync flushes any buffered log entries.
 func Sync() {
-	if Log != nil {
-		_ = Log.Sync()
+	if log != nil {
+		_ = log.Sync()
 	}
 }

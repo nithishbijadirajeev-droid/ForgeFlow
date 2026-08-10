@@ -9,12 +9,17 @@ import (
 )
 
 type ProjectService struct {
-	repository *repository.ProjectRepository
+	repository repository.ProjectRepositoryInterface
 }
 
-func NewProjectService() *ProjectService {
+func NewProjectService(repo repository.ProjectRepositoryInterface) *ProjectService {
+
+	if repo == nil {
+		repo = repository.NewProjectRepository()
+	}
+
 	return &ProjectService{
-		repository: repository.NewProjectRepository(),
+		repository: repo,
 	}
 }
 
@@ -46,6 +51,7 @@ func (s *ProjectService) GetByID(id uuid.UUID) (*models.Project, error) {
 func (s *ProjectService) Update(id uuid.UUID, req dto.UpdateProjectRequest) (*models.Project, error) {
 
 	project, err := s.repository.GetByID(id)
+
 	if err != nil {
 		return nil, err
 	}
@@ -67,6 +73,7 @@ func (s *ProjectService) Update(id uuid.UUID, req dto.UpdateProjectRequest) (*mo
 	}
 
 	err = s.repository.Update(project)
+
 	if err != nil {
 		return nil, err
 	}

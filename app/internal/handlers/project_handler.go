@@ -17,7 +17,7 @@ type ProjectHandler struct {
 
 func NewProjectHandler() *ProjectHandler {
 	return &ProjectHandler{
-		service: service.NewProjectService(),
+		service: service.NewProjectService(nil),
 	}
 }
 

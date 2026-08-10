@@ -2,9 +2,18 @@ package repository
 
 import (
 	"github.com/google/uuid"
+
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/database"
 	"github.com/nithishbijadirajeev-droid/forgeflow/app/internal/models"
 )
+
+type ProjectRepositoryInterface interface {
+	Create(project *models.Project) error
+	GetAll() ([]models.Project, error)
+	GetByID(id uuid.UUID) (*models.Project, error)
+	Update(project *models.Project) error
+	Delete(id uuid.UUID) error
+}
 
 type ProjectRepository struct{}
 
@@ -17,12 +26,16 @@ func (r *ProjectRepository) Create(project *models.Project) error {
 }
 
 func (r *ProjectRepository) GetAll() ([]models.Project, error) {
+
 	var projects []models.Project
+
 	err := database.DB.Find(&projects).Error
+
 	return projects, err
 }
 
 func (r *ProjectRepository) GetByID(id uuid.UUID) (*models.Project, error) {
+
 	var project models.Project
 
 	err := database.DB.First(&project, "id = ?", id).Error

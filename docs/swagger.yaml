@@ -1,21 +1,22 @@
 basePath: /
 definitions:
-  dto.AuthResponse:
-    properties:
-      token:
-        type: string
-    type: object
   dto.CreateProjectRequest:
     properties:
       description:
+        maxLength: 500
         type: string
       language:
+        maxLength: 50
+        minLength: 2
         type: string
       name:
+        maxLength: 100
+        minLength: 2
         type: string
       repository_url:
         type: string
     required:
+    - language
     - name
     type: object
   dto.LoginRequest:
@@ -23,36 +24,23 @@ definitions:
       email:
         type: string
       password:
+        minLength: 8
         type: string
     required:
     - email
     - password
-    type: object
-  dto.ProjectResponse:
-    properties:
-      created_at:
-        type: string
-      description:
-        type: string
-      id:
-        type: string
-      language:
-        type: string
-      name:
-        type: string
-      repository_url:
-        type: string
-      updated_at:
-        type: string
     type: object
   dto.RegisterRequest:
     properties:
       email:
         type: string
       name:
+        maxLength: 100
+        minLength: 2
         type: string
       password:
-        minLength: 6
+        maxLength: 100
+        minLength: 8
         type: string
     required:
     - email
@@ -62,13 +50,27 @@ definitions:
   dto.UpdateProjectRequest:
     properties:
       description:
+        maxLength: 500
         type: string
       language:
+        maxLength: 50
+        minLength: 2
         type: string
       name:
+        maxLength: 100
+        minLength: 2
         type: string
       repository_url:
         type: string
+    type: object
+  response.APIResponse:
+    properties:
+      data: {}
+      error: {}
+      message:
+        type: string
+      success:
+        type: boolean
     type: object
 host: localhost:8080
 info:
@@ -86,7 +88,7 @@ paths:
     post:
       consumes:
       - application/json
-      description: Login with email and password to receive a JWT token
+      description: Login with email and password
       parameters:
       - description: Login Request
         in: body
@@ -100,40 +102,41 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.AuthResponse'
+            $ref: '#/definitions/response.APIResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "401":
           description: Unauthorized
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       summary: Authenticate user
       tags:
       - Auth
   /api/v1/projects:
     get:
-      description: Retrieve all projects
+      description: Retrieve projects with pagination
+      parameters:
+      - description: Page Number
+        in: query
+        name: page
+        type: integer
+      - description: Items Per Page
+        in: query
+        name: limit
+        type: integer
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/dto.ProjectResponse'
-            type: array
+            $ref: '#/definitions/response.APIResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       security:
       - BearerAuth: []
       summary: Get all projects
@@ -156,19 +159,15 @@ paths:
         "201":
           description: Created
           schema:
-            $ref: '#/definitions/dto.ProjectResponse'
+            $ref: '#/definitions/response.APIResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       security:
       - BearerAuth: []
       summary: Create a new project
@@ -176,7 +175,7 @@ paths:
       - Projects
   /api/v1/projects/{id}:
     delete:
-      description: Delete a project by ID
+      description: Delete a project
       parameters:
       - description: Project ID
         in: path
@@ -189,28 +188,22 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "500":
           description: Internal Server Error
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       security:
       - BearerAuth: []
       summary: Delete project
       tags:
       - Projects
     get:
-      description: Retrieve a single project
+      description: Retrieve a project
       parameters:
       - description: Project ID
         in: path
@@ -223,19 +216,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProjectResponse'
+            $ref: '#/definitions/response.APIResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "404":
           description: Not Found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       security:
       - BearerAuth: []
       summary: Get project by ID
@@ -244,7 +233,7 @@ paths:
     put:
       consumes:
       - application/json
-      description: Update an existing project
+      description: Update a project
       parameters:
       - description: Project ID
         in: path
@@ -263,19 +252,15 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/dto.ProjectResponse'
+            $ref: '#/definitions/response.APIResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "404":
           description: Not Found
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       security:
       - BearerAuth: []
       summary: Update project
@@ -299,15 +284,11 @@ paths:
         "201":
           description: Created
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
         "400":
           description: Bad Request
           schema:
-            additionalProperties:
-              type: string
-            type: object
+            $ref: '#/definitions/response.APIResponse'
       summary: Register a new user
       tags:
       - Auth

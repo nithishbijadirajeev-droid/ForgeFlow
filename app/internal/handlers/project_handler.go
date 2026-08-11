@@ -55,23 +55,50 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 // GetAll godoc
 //
 //	@Summary		Get all projects
-//	@Description	Retrieve all projects
+//	@Description	Retrieve projects with pagination
 //	@Tags			Projects
 //	@Security		BearerAuth
 //	@Produce		json
-//	@Success		200	{object}	response.APIResponse
-//	@Failure		500	{object}	response.APIResponse
+//	@Param			page		query		int		false	"Page Number"
+//	@Param			limit		query		int		false	"Items Per Page"
+//	@Success		200			{object}	response.APIResponse
+//	@Failure		500			{object}	response.APIResponse
 //	@Router			/api/v1/projects [get]
 func (h *ProjectHandler) GetAll(c *gin.Context) {
 
-	projects, err := h.service.GetAll()
+	var query dto.ProjectQuery
 
-	if err != nil {
-		response.Error(c, http.StatusInternalServerError, "Unable to retrieve projects", err.Error())
+	if err := c.ShouldBindQuery(&query); err != nil {
+		response.Error(
+			c,
+			http.StatusBadRequest,
+			"Invalid query parameters",
+			err.Error(),
+		)
 		return
 	}
 
-	response.Success(c, http.StatusOK, "Projects retrieved successfully", projects)
+	projects, meta, err := h.service.GetAll(query)
+
+	if err != nil {
+		response.Error(
+			c,
+			http.StatusInternalServerError,
+			"Unable to retrieve projects",
+			err.Error(),
+		)
+		return
+	}
+
+	response.Success(
+		c,
+		http.StatusOK,
+		"Projects retrieved successfully",
+		gin.H{
+			"projects": projects,
+			"meta":     meta,
+		},
+	)
 }
 
 // GetByID godoc

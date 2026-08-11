@@ -40,8 +40,35 @@ func (s *ProjectService) Create(req dto.CreateProjectRequest) (*models.Project, 
 	return project, nil
 }
 
-func (s *ProjectService) GetAll() ([]models.Project, error) {
-	return s.repository.GetAll()
+func (s *ProjectService) GetAll(query dto.ProjectQuery) ([]models.Project, dto.PaginationMeta, error) {
+
+	projects, total, err := s.repository.GetAll(query)
+
+	if err != nil {
+		return nil, dto.PaginationMeta{}, err
+	}
+
+	page := query.Page
+	limit := query.Limit
+
+	if page <= 0 {
+		page = 1
+	}
+
+	if limit <= 0 {
+		limit = 10
+	}
+
+	totalPages := int((total + int64(limit) - 1) / int64(limit))
+
+	meta := dto.PaginationMeta{
+		Page:       page,
+		Limit:      limit,
+		Total:      total,
+		TotalPages: totalPages,
+	}
+
+	return projects, meta, nil
 }
 
 func (s *ProjectService) GetByID(id uuid.UUID) (*models.Project, error) {

@@ -33,7 +33,7 @@ func (r *ProjectRepository) GetAll(query dto.ProjectQuery) ([]models.Project, in
 		total    int64
 	)
 
-	db := database.DB.Model(&models.Project{})
+	db := buildProjectQuery(database.DB, query)
 
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err

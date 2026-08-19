@@ -34,3 +34,46 @@ Production-ready backend engineering project built with Go, Gin, PostgreSQL, JWT
 - Swagger Documentation
 
 ---
+
+##  Project Progress
+
+###  Completed
+
+- [x] REST API Development
+- [x] PostgreSQL Integration
+- [x] GORM ORM
+- [x] JWT Authentication
+- [x] Protected Routes
+- [x] CRUD Operations
+- [x] Docker & Docker Compose
+- [x] Swagger/OpenAPI Documentation
+- [x] Environment Configuration
+- [x] Health, Readiness & Version Endpoints
+- [x] Request Validation
+- [x] Structured Logging
+- [x] Request ID Middleware
+- [x] Repository Pattern
+- [x] Dependency Injection
+- [x] Authentication Unit Tests
+- [x] Server-side Pagination
+- [x] Reusable Query Builder
+
+### In Progress
+
+- [ ] Search
+- [ ] Filtering
+- [ ] Dynamic Sorting
+- [ ] Project Unit Tests
+- [ ] Redis Caching
+- [ ] Rate Limiting
+- [ ] Background Jobs
+
+###  Planned
+
+- [ ] Prometheus Metrics
+- [ ] Grafana Dashboards
+- [ ] GitHub Actions CI/CD
+- [ ] Kubernetes Deployment
+- [ ] Helm Charts
+- [ ] Terraform Infrastructure
+- [ ] AWS Deployment

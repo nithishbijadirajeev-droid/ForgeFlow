@@ -102,3 +102,67 @@ Production-ready backend engineering project built with Go, Gin, PostgreSQL, JWT
                     ▼
            PostgreSQL + GORM
 ```
+
+---
+
+#  Project Structure
+
+```text
+forgeflow/
+
+├── app/
+│   ├── cmd/
+│   ├── internal/
+│   │   ├── handlers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── repository/
+│   │   ├── routes/
+│   │   └── service/
+│   └── pkg/
+│       ├── dto/
+│       ├── jwt/
+│       ├── response/
+│       └── validation/
+│
+├── docs/
+├── deploy/
+├── monitoring/
+├── infrastructure/
+├── docker-compose.yml
+└── README.md
+```
+
+---
+
+#  API Features
+
+- JWT Authentication
+- User Registration & Login
+- Protected Routes
+- Project CRUD
+- Pagination
+- Validation
+- Swagger Documentation
+- Structured Logging
+- Request ID Middleware
+- Health Endpoint
+- Readiness Endpoint
+- Version Endpoint
+
+---
+
+# Coming Soon
+
+-  Search
+- Filtering
+- Dynamic Sorting
+- Redis Cache
+- Prometheus Metrics
+- Grafana Dashboards
+- More Unit Tests
+- GitHub Actions CI/CD
+- Kubernetes
+- Helm
+- Terraform
+- AWS Deployment

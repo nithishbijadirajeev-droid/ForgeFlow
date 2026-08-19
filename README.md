@@ -77,3 +77,28 @@ Production-ready backend engineering project built with Go, Gin, PostgreSQL, JWT
 - [ ] Helm Charts
 - [ ] Terraform Infrastructure
 - [ ] AWS Deployment
+
+---
+
+#  Architecture
+
+```text
+                 Client
+                    │
+                    ▼
+              Gin Router
+                    │
+      ┌─────────────┴─────────────┐
+      ▼                           ▼
+ Authentication             Project APIs
+      │                           │
+      ▼                           ▼
+   Auth Service             Project Service
+      │                           │
+      └─────────────┬─────────────┘
+                    ▼
+            Repository Layer
+                    │
+                    ▼
+           PostgreSQL + GORM
+```

@@ -1,45 +1,30 @@
 # ForgeFlow
 
-Enterprise Secure Software Delivery Platform
+Production-ready backend engineering project built with Go, Gin, PostgreSQL, JWT Authentication, Docker, Swagger, and modern cloud-native engineering practices.
 
-## Overview
+## Tech Stack
 
-ForgeFlow is a cloud-native software delivery platform built to demonstrate modern Platform Engineering practices.
-
-This project will progressively implement:
-
-- GitHub Actions CI/CD
+- Go
+- Gin
+- PostgreSQL
+- GORM
+- JWT Authentication
 - Docker
-- Kubernetes
-- Helm
-- Argo CD
-- Terraform
-- Prometheus
-- Grafana
-- Security Scanning
+- Swagger (OpenAPI)
 
-## Current Status
+## Current Features
 
-✅ HTTP Server
+- RESTful APIs
+- JWT Authentication
+- Protected Routes
+- CRUD Operations
+- Server-side Pagination
+- Centralized Validation
+- Structured Logging
+- Request ID Middleware
+- Dependency Injection
+- Repository Pattern
+- Unit Testing
+- Swagger Documentation
 
-🚧 Docker (Next)
-
-🚧 Kubernetes
-
-🚧 GitHub Actions
-
-🚧 Helm
-
-🚧 ArgoCD
-
-## Run
-
-```bash
-go run ./cmd/server
-```
-
-Health Check
-
-```bash
-curl http://localhost:8080/health
-```
+---

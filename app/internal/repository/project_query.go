@@ -14,8 +14,16 @@ func buildProjectQuery(db *gorm.DB, query dto.ProjectQuery) *gorm.DB {
 	db = db.Model(&models.Project{})
 
 	// Search by project name
+	// Search by project name or description
 	if query.Search != "" {
-		db = db.Where("LOWER(name) LIKE ?", "%"+strings.ToLower(query.Search)+"%")
+
+		search := "%" + strings.ToLower(query.Search) + "%"
+
+		db = db.Where(
+			"LOWER(name) LIKE ? OR LOWER(description) LIKE ?",
+			search,
+			search,
+		)
 	}
 
 	// Filter by language

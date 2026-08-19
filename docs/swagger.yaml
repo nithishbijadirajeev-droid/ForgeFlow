@@ -116,7 +116,7 @@ paths:
       - Auth
   /api/v1/projects:
     get:
-      description: Retrieve projects with pagination
+      description: Retrieve projects with pagination, search, filtering, and sorting
       parameters:
       - description: Page Number
         in: query
@@ -126,6 +126,22 @@ paths:
         in: query
         name: limit
         type: integer
+      - description: Search by project name or description
+        in: query
+        name: search
+        type: string
+      - description: Filter by programming language
+        in: query
+        name: language
+        type: string
+      - description: Sort field (name, language, created_at)
+        in: query
+        name: sort
+        type: string
+      - description: Sort order (asc or desc)
+        in: query
+        name: order
+        type: string
       produces:
       - application/json
       responses:

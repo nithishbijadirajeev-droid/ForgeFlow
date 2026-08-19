@@ -55,12 +55,16 @@ func (h *ProjectHandler) Create(c *gin.Context) {
 // GetAll godoc
 //
 //	@Summary		Get all projects
-//	@Description	Retrieve projects with pagination
+//	@Description	Retrieve projects with pagination, search, filtering, and sorting
 //	@Tags			Projects
 //	@Security		BearerAuth
 //	@Produce		json
 //	@Param			page		query		int		false	"Page Number"
 //	@Param			limit		query		int		false	"Items Per Page"
+//	@Param			search		query		string	false	"Search by project name or description"
+//	@Param			language	query		string	false	"Filter by programming language"
+//	@Param			sort		query		string	false	"Sort field (name, language, created_at)"
+//	@Param			order		query		string	false	"Sort order (asc or desc)"
 //	@Success		200			{object}	response.APIResponse
 //	@Failure		500			{object}	response.APIResponse
 //	@Router			/api/v1/projects [get]

@@ -74,7 +74,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieve projects with pagination",
+                "description": "Retrieve projects with pagination, search, filtering, and sorting",
                 "produces": [
                     "application/json"
                 ],
@@ -93,6 +93,30 @@ const docTemplate = `{
                         "type": "integer",
                         "description": "Items Per Page",
                         "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search by project name or description",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by programming language",
+                        "name": "language",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort field (name, language, created_at)",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Sort order (asc or desc)",
+                        "name": "order",
                         "in": "query"
                     }
                 ],

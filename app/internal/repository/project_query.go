@@ -10,14 +10,11 @@ import (
 )
 
 func buildProjectQuery(db *gorm.DB, query dto.ProjectQuery) *gorm.DB {
-
 	db = db.Model(&models.Project{})
 
-	// Search by project name
 	// Search by project name or description
-	if query.Search != "" {
-
-		search := "%" + strings.ToLower(query.Search) + "%"
+	if strings.TrimSpace(query.Search) != "" {
+		search := "%" + strings.ToLower(strings.TrimSpace(query.Search)) + "%"
 
 		db = db.Where(
 			"LOWER(name) LIKE ? OR LOWER(description) LIKE ?",
@@ -27,20 +24,27 @@ func buildProjectQuery(db *gorm.DB, query dto.ProjectQuery) *gorm.DB {
 	}
 
 	// Filter by language
-	if query.Language != "" {
-		db = db.Where("language = ?", query.Language)
+	if strings.TrimSpace(query.Language) != "" {
+		language := strings.ToLower(strings.TrimSpace(query.Language))
+		db = db.Where("LOWER(language) = ?", language)
 	}
 
-	// Sorting
+	// Allow only safe sort fields
+	allowedSortFields := map[string]string{
+		"name":       "name",
+		"language":   "language",
+		"created_at": "created_at",
+	}
+
 	sortField := "created_at"
 
-	if query.Sort != "" {
-		sortField = query.Sort
+	if field, ok := allowedSortFields[strings.ToLower(strings.TrimSpace(query.Sort))]; ok {
+		sortField = field
 	}
 
 	order := "DESC"
 
-	if strings.ToUpper(query.Order) == "ASC" {
+	if strings.ToLower(strings.TrimSpace(query.Order)) == "asc" {
 		order = "ASC"
 	}
 
